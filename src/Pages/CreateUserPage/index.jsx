@@ -1,27 +1,39 @@
-import { useState, useContext } from "react";
-import { AuthContext } from "../../contexts/auth";
+import { Container, Form, Title, InputField, Input, Label, IconUser, IconPassword, IconName, Button } from "../../styles/stylesCadLogin";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
-import { Form, Container, Title, InputField, Input, Label, IconUser, IconPassword, Button, StyledLink } from "../../styles/stylesCadLogin";
+import { createUser } from "../../services/api";
+/* 
+    O que precisa no form:
+        - Email - required
+        - Senha - required
+        - Nome - required
+*/
 
-const LoginPage = () => {
+const CreateUserPage = () => {
+
+    const navigate = useNavigate();
 
     const { register, handleSubmit, formState: { errors } } = useForm();
-
-    const { login } = useContext(AuthContext);
-
+    
     const onSubmit = async (data) => {
         try {
-            await login(data.email, data.password); 
+            await createUser(data.email, data.password, data.name);
+
+            navigate('/login');
         } catch (err) {
             console.error('Deu ruim', err)
+            if (err.response.status === 422) {
+                alert(`Já existe um usuário com o email ${data.email} cadastrado!`)
+            }
         }
     }
 
     return (
         <Container>
             <Form onSubmit={ handleSubmit(onSubmit) }>
-                <Title>Login</Title>
+                <Title>Cadastrar</Title>
+
                 <InputField>
                     <Label htmlFor="email">Email</Label>
                     <IconUser />
@@ -41,7 +53,7 @@ const LoginPage = () => {
                         <span style={{ color: 'red', marginTop: 5}}>Esse campo é obrigatório</span>
                     }
                 </InputField>
-                
+
                 <InputField>
                     <Label htmlFor="password">Senha</Label>
                     <IconPassword />
@@ -61,13 +73,31 @@ const LoginPage = () => {
                         <span style={{ color: 'red', marginTop: 5}}>Esse campo é obrigatório</span>
                     }
                 </InputField>
-                
 
-                <Button>Entrar</Button>
-                <StyledLink to='/create-user'>Crie uma conta aqui!</StyledLink>
+                <InputField>
+                    <Label htmlFor="name">Apelido</Label>
+                    <IconName />
+                    <Input 
+                        type="text"
+                        {...register(
+                            "name",
+                            {
+                                required: true
+                            }
+                        )}
+                        name="name"
+                        id="name"
+                    />
+                    {
+                        errors.name && 
+                        <span style={{ color: 'red', marginTop: 5}}>Esse campo é obrigatório</span>
+                    }
+                </InputField>
+
+                <Button>Cadastrar</Button>
             </Form>
         </Container>
     )
-};
+}
 
-export default LoginPage;
+export default CreateUserPage;

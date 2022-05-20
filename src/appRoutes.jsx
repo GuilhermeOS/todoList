@@ -11,6 +11,7 @@ import GlobalStyle from "./globalStyles";
 
 import MainPage from "./Pages/MainPage";
 import LoginPage from "./Pages/LoginPage";
+import CreateUserPage from "./Pages/CreateUserPage";
 
 const AppRoutes = () => {
 
@@ -35,6 +36,7 @@ const AppRoutes = () => {
                 <Routes>
                     <Route path="/" element={ <Private><MainPage /></Private> } />
                     <Route path="/login" element={ <LoginPage />}/>
+                    <Route path="/create-user" element={ <CreateUserPage />}/>
                 </Routes>
             </AuthProvider>
         </Router>

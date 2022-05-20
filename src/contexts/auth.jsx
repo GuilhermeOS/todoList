@@ -25,19 +25,23 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
-       const response = await createSession(email, password);
 
-       console.log(email)
-       console.log(password)
+        try {
+            const response = await createSession(email, password);
 
-       localStorage.setItem('user', JSON.stringify(response.data.user));
-       localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            localStorage.setItem('token', response.data.token);
 
-       api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
+            api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
 
-       setUser(response.data.user);
+            setUser(response.data.user);
 
-       navigate('/');
+            navigate('/');
+        } catch (err) {
+            console.error('deu ruim', err)
+            alert('Usuário ou Senha Incorretos!')
+        }
+       
     };
 
     const logout = () => {

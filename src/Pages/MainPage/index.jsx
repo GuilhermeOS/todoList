@@ -17,6 +17,7 @@ const MainPage = () => {
             <button onClick={ handleLogout }>
                 Sair
             </button>
+            <h1>{user.name}</h1>
         </div>
     )
 };
